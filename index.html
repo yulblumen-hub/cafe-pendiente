@@ -117,7 +117,7 @@ const PRUEBA = /[?&]prueba/.test(location.search); // con ?prueba el aviso llega
 
 const $ = s => document.querySelector(s);
 const app = $('#app');
-const TOTAL = 6;
+const TOTAL = 5;
 const st = { noTries: 0, fecha: null, hora: null, bebida: null, lugar: '' };
 
 function avisar(titulo, texto){
@@ -162,45 +162,15 @@ function p2(){
 }
 function dijoNo(){
   st.noTries++;
-  pantalla(2, `
-    <div class="emoji">😐</div>
-    <h1>Ok.</h1>
-    <p id="resp">Respeto tu decisión.</p>
-    <div class="actions" id="acc" style="visibility:hidden"><button class="btn" onclick="dijoSi()">bueno dale, sí</button></div>
-  `);
-  setTimeout(()=>{ const r=$('#resp'); if(r){ r.innerHTML='Mentira, no la respeto.'; $('#acc').style.visibility='visible'; } }, 1600);
+  avisar('Alexia tocó NO 😅', 'Igual sigue adelante: no importa lo que elija.');
+  p4();
 }
 function dijoSi(){
-  avisar('Alexia dijo que SÍ ☕', st.noTries ? `Antes apretó NO ${st.noTries} ${st.noTries===1?'vez':'veces'} 😅` : 'Sin dudar, ni tocó el NO.');
-  segura();
+  avisar('Alexia dijo que SÍ ☕', 'Sin dudar.');
+  p4();
 }
 
-// 3 · estás segura?
-function segura(){
-  pantalla(3, `
-    <div class="emoji">🤨</div>
-    <h1>Estás segura?</h1>
-    <p>Mirá que después no hay vuelta atrás.</p>
-    <div class="actions">
-      <button class="btn" onclick="p4()">sí</button>
-      <button class="btn ghost" id="nose" onclick="noSe()">no sé</button>
-    </div>
-    <p id="cuenta" style="margin-top:14px;min-height:22px"></p>
-  `);
-}
-function noSe(){
-  $('#nose').disabled = true;
-  let n = 5;
-  const c = $('#cuenta');
-  const tick = () => {
-    if(!$('#cuenta')) return;
-    if(n > 0){ c.textContent = `ok, tenés ${n} segundos para pensarlo`; n--; setTimeout(tick, 1000); }
-    else { c.textContent = 'listo, eso es un sí'; setTimeout(p4, 1100); }
-  };
-  tick();
-}
-
-// 4 · cuándo
+// 3 · cuándo
 let mesVista, grisHasta, grisToques = 0, grisLibre = false;
 function p4(){
   const hoy = new Date(); hoy.setHours(0,0,0,0);
@@ -209,7 +179,7 @@ function p4(){
     mesVista = new Date(hoy.getFullYear(), hoy.getMonth() + (quedan < 7 ? 1 : 0), 1);
     grisHasta = new Date(mesVista.getFullYear(), mesVista.getMonth()+1, 1); // el primer mes: Yul no tiene ganas
   }
-  pantalla(4, `
+  pantalla(3, `
     <div class="emoji">📅</div>
     <h1>Cuándo?</h1>
     <p>Elegí día y hora. Yo tengo la agenda re libre (no le digas a nadie).</p>
@@ -225,7 +195,7 @@ function p4(){
   $('#otraHora').oninput = e => {
     const v = e.target.value;
     st.hora = v && v >= horaMin() ? v : null;
-    if(v && v < horaMin()) $('#gris').textContent = 'entre semana Yul labura, desde las 18 😅';
+    if(v && v < horaMin()) $('#gris').textContent = 'entre semana, desde las 18';
     chequear4();
   };
 }
@@ -235,9 +205,8 @@ function pintarHoras(){
   const t = $('#times');
   if(!st.fecha){ t.innerHTML = '<span class="psst">elegí un día primero</span>'; return; }
   const horas = finde() ? ['10:00','12:00','16:00','18:00','20:00'] : ['18:00','19:00','20:00','21:00'];
-  const chistes = {'10:00':'10:00 (valiente)','12:00':'12:00 (brunch sin decir brunch)','16:00':'16:00 (merienda, lo correcto)','18:00':'18:00 (recién salido del laburo, no juzgues)','19:00':'19:00','20:00':'20:00 (ya casi cena, ojo)','21:00':'21:00 (café a las 21, sos rara)'};
   if(st.hora && !horas.includes(st.hora) && st.hora < horaMin()) st.hora = null;
-  t.innerHTML = [...horas,'otra'].map(h=>`<button class="chip ${st.hora===h?'sel':''}" data-h="${h}">${h==='otra'?'otra hora':(chistes[h]||h)}</button>`).join('');
+  t.innerHTML = [...horas,'otra'].map(h=>`<button class="chip ${st.hora===h?'sel':''}" data-h="${h}">${h==='otra'?'otra hora':h}</button>`).join('');
   $('#otraHora').min = horaMin();
   t.onclick = e => {
     const b = e.target.closest('.chip'); if(!b) return;
@@ -281,7 +250,7 @@ function mover(n){ mesVista = new Date(mesVista.getFullYear(), mesVista.getMonth
 function elegir(y,m,d){ st.fecha = new Date(y,m,d); pintarCal(); pintarHoras(); chequear4(); }
 function chequear4(){ $('#sig4').disabled = !(st.fecha && st.hora); }
 
-// 5 · qué tomás + dónde
+// 4 · qué tomás + dónde
 const bebidas = [
   ['☕','Café','clásica. respeto.'],['🧉','Mate','ok pero el termo lo traés vos'],
   ['🍵','Té','té. en un café. bueno.'],['🥤','Algo frío','en octubre? valiente'],
@@ -289,7 +258,7 @@ const bebidas = [
 ];
 const lugares = [['📍','Cerca'],['📍📍','Más cerca'],['🚪','En la puerta de tu casa'],['🎲','Sorprendeme']];
 function p5(){
-  pantalla(5, `
+  pantalla(4, `
     <div class="emoji">🤔</div>
     <h1>Qué tomás?</h1>
     <div class="opts" id="beb">${bebidas.map((b,i)=>`<button class="chip ${i===bebidas.length-1?'wide':''}" data-i="${i}">${b[0]} ${b[1]}</button>`).join('')}</div>
@@ -315,30 +284,24 @@ function p5(){
   };
 }
 
-// 6 · cargando… y el troll final
+// 5 · cargando… y el troll final
 function p6(){
   const fecha = st.fecha.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
   const lugar = st.lugar || 'lo elige Yul';
   avisar('Café con Alexia: eligió ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Veces que apretó NO: ${st.noTries}`);
-  pantalla(6, `
+  pantalla(5, `
     <div class="emoji">⏳</div>
     <h1>Guardando…</h1>
     <div class="bar" style="max-width:none;margin:18px 0 6px"><i id="pb" style="transition:width 2.4s linear"></i></div>
   `);
   requestAnimationFrame(()=>requestAnimationFrame(()=>$('#pb').style.width='92%'));
   setTimeout(()=>{
-    const txt = `Hola Yul, la web me mandó a hablar con vos 🙄\nCafé: ${fecha}, ${st.hora} hs\nTomo: ${st.bebida}\nLugar: ${lugar}`;
+    const txt = `Hola Yul, la web me dijo que lo coordine con vos 🙄\nCafé: ${fecha}, ${st.hora} hs\nTomo: ${st.bebida}\nLugar: ${lugar}`;
     const link = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(txt);
     app.innerHTML = `<div class="card">
       <div class="emoji">🙃</div>
-      <h1>Ok sabés qué? No quiero que lo hagas por acá.</h1>
-      <p>Coordiná con Yul.</p>
-      <div class="expte">
-        Día: <b>${fecha}, ${st.hora} hs</b><br>
-        Tomás: <b>${esc(st.bebida)}</b><br>
-        Dónde: <b>${esc(lugar)}</b><br>
-        Veces que tocaste NO: <b class="red">${st.noTries}</b>
-      </div>
+      <h1>Ok sabés qué? No importa lo que elegiste.</h1>
+      <p>Lo tenés que coordinar con Yul.</p>
       <div class="actions"><a class="btn" href="${link}" target="_blank" style="text-decoration:none">escribirle a Yul 💬</a></div>
       <p class="ps">PD: la gente normal manda un mensaje. Yo hice una web para que al final me mandes un mensaje.</p>
     </div>`;
@@ -351,7 +314,7 @@ const VER = +(new URLSearchParams(location.search).get('ver')||0);
 if(VER){
   avisar = ()=>{};
   Object.assign(st, {noTries:1, fecha:new Date(2026,10,4), hora:'19:00', bebida:'Mate', lugar:'En la puerta de tu casa'});
-  [p1,p2,dijoNo,segura,()=>{segura();noSe();},()=>{st.fecha=null;st.hora=null;p4();},()=>{st.fecha=null;st.hora=null;p4();sinGanas();},()=>{p4();grisLibre=true;mover(1);st.fecha=new Date(2026,10,4);elegir(st.fecha.getFullYear(),st.fecha.getMonth(),st.fecha.getDate());document.querySelector('[data-h="19:00"]').click();},()=>{p5();document.querySelector('#beb [data-i="1"]').click();document.querySelector('#lug [data-l="En la puerta de tu casa"]').click();},p6][VER-1]();
+  [p1,p2,()=>{st.fecha=null;st.hora=null;p4();},()=>{st.fecha=null;st.hora=null;p4();sinGanas();},()=>{p4();grisLibre=true;mover(1);st.fecha=new Date(2026,10,4);elegir(2026,10,4);document.querySelector('[data-h="19:00"]').click();},()=>{p5();document.querySelector('#beb [data-i="1"]').click();document.querySelector('#lug [data-l="En la puerta de tu casa"]').click();},p6][VER-1]();
 } else p1();
 </script>
 </body>
