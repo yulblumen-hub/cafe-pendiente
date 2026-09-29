@@ -112,7 +112,7 @@
 // ===== ajustes =====
 const NOMBRE = 'Alexia';
 const NTFY = 'yul-cafe-8db6c76d';          // canal de ntfy donde te llega el aviso
-const WA = '';                              // celu de Yul con código de país, ej: 5491112345678 (vacío = WhatsApp elige contacto)
+const WA = '5491159628940';                              // celu de Yul con código de país, ej: 5491112345678 (vacío = WhatsApp elige contacto)
 const PRUEBA = /[?&]prueba/.test(location.search); // con ?prueba el aviso llega marcado como prueba
 
 const $ = s => document.querySelector(s);
@@ -212,13 +212,13 @@ function p4(){
   pantalla(4, `
     <div class="emoji">📅</div>
     <h1>Cuándo?</h1>
-    <p>Elegí día y hora.</p>
+    <p>Elegí día y hora. Yo tengo la agenda re libre (no le digas a nadie).</p>
     <div class="cal" id="cal"></div>
     <div class="psst" id="gris" style="margin-top:8px">en gris: días en los que Yul no tiene ganas</div>
     <div class="lbl">Hora</div>
     <div class="times" id="times"></div>
     <input type="time" id="otraHora" style="display:none" step="900">
-    <div class="actions"><button class="btn" id="sig4" disabled onclick="p5()">siguiente</button></div>
+    <div class="actions"><button class="btn" id="sig4" disabled onclick="p5()">dale</button></div>
   `);
   pintarCal();
   pintarHoras();
@@ -235,8 +235,9 @@ function pintarHoras(){
   const t = $('#times');
   if(!st.fecha){ t.innerHTML = '<span class="psst">elegí un día primero</span>'; return; }
   const horas = finde() ? ['10:00','12:00','16:00','18:00','20:00'] : ['18:00','19:00','20:00','21:00'];
+  const chistes = {'10:00':'10:00 (valiente)','12:00':'12:00 (brunch sin decir brunch)','16:00':'16:00 (merienda, lo correcto)','18:00':'18:00 (recién salido del laburo, no juzgues)','19:00':'19:00','20:00':'20:00 (ya casi cena, ojo)','21:00':'21:00 (café a las 21, sos rara)'};
   if(st.hora && !horas.includes(st.hora) && st.hora < horaMin()) st.hora = null;
-  t.innerHTML = [...horas,'otra'].map(h=>`<button class="chip ${st.hora===h?'sel':''}" data-h="${h}">${h==='otra'?'otra hora':h}</button>`).join('');
+  t.innerHTML = [...horas,'otra'].map(h=>`<button class="chip ${st.hora===h?'sel':''}" data-h="${h}">${h==='otra'?'otra hora':(chistes[h]||h)}</button>`).join('');
   $('#otraHora').min = horaMin();
   t.onclick = e => {
     const b = e.target.closest('.chip'); if(!b) return;
@@ -281,28 +282,43 @@ function elegir(y,m,d){ st.fecha = new Date(y,m,d); pintarCal(); pintarHoras(); 
 function chequear4(){ $('#sig4').disabled = !(st.fecha && st.hora); }
 
 // 5 · qué tomás + dónde
-const bebidas = [['☕','Café'],['🧉','Mate'],['🍵','Té'],['🥤','Algo frío'],['💸','Lo que sea, total invitás vos']];
+const bebidas = [
+  ['☕','Café','clásica. respeto.'],['🧉','Mate','ok pero el termo lo traés vos'],
+  ['🍵','Té','té. en un café. bueno.'],['🥤','Algo frío','en octubre? valiente'],
+  ['💸','Lo que sea, total invitás vos','me gusta tu actitud (no)']
+];
+const lugares = [['📍','Cerca'],['📍📍','Más cerca'],['🚪','En la puerta de tu casa'],['🎲','Sorprendeme']];
 function p5(){
   pantalla(5, `
     <div class="emoji">🤔</div>
     <h1>Qué tomás?</h1>
-    <div class="opts" id="beb">${bebidas.map((b,i)=>`<button class="chip ${i===bebidas.length-1?'wide':''}" data-b="${b[1]}">${b[0]} ${b[1]}</button>`).join('')}</div>
-    <div class="lbl">Dónde? (si no se te ocurre, dejalo vacío)</div>
-    <input type="text" id="lugar" placeholder="algún lugar que te guste" maxlength="80" value="${esc(st.lugar)}">
+    <div class="opts" id="beb">${bebidas.map((b,i)=>`<button class="chip ${i===bebidas.length-1?'wide':''}" data-i="${i}">${b[0]} ${b[1]}</button>`).join('')}</div>
+    <p class="psst" id="bcom" style="margin-top:10px"></p>
+    <div class="lbl">Dónde?</div>
+    <div class="opts" id="lug">${lugares.map(l=>`<button class="chip" data-l="${l[1]}">${l[0]} ${l[1]}</button>`).join('')}</div>
+    <p class="psst" id="lcom" style="margin-top:10px"></p>
     <div class="actions"><button class="btn" id="sig5" disabled onclick="p6()">listo</button></div>
   `);
+  const ok = () => $('#sig5').disabled = !(st.bebida && st.lugar);
   $('#beb').onclick = e => {
     const b = e.target.closest('.chip'); if(!b) return;
     document.querySelectorAll('#beb .chip').forEach(c=>c.classList.remove('sel'));
-    b.classList.add('sel'); st.bebida = b.dataset.b; $('#sig5').disabled = false;
+    b.classList.add('sel'); const x = bebidas[+b.dataset.i];
+    st.bebida = x[1]; $('#bcom').textContent = x[2]; ok();
   };
-  $('#lugar').oninput = e => st.lugar = e.target.value;
+  $('#lug').onclick = e => {
+    const b = e.target.closest('.chip'); if(!b) return;
+    document.querySelectorAll('#lug .chip').forEach(c=>c.classList.remove('sel'));
+    b.classList.add('sel'); st.lugar = b.dataset.l;
+    $('#lcom').textContent = st.lugar==='En la puerta de tu casa' ? 'ok, llevo dos vasitos y una reposera' : 'anotado. mentira, no anoto nada.';
+    ok();
+  };
 }
 
 // 6 · cargando… y el troll final
 function p6(){
   const fecha = st.fecha.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
-  const lugar = st.lugar.trim() || 'lo elige Yul';
+  const lugar = st.lugar || 'lo elige Yul';
   avisar('Café con Alexia: eligió ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Veces que apretó NO: ${st.noTries}`);
   pantalla(6, `
     <div class="emoji">⏳</div>
@@ -334,8 +350,8 @@ function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;'
 const VER = +(new URLSearchParams(location.search).get('ver')||0);
 if(VER){
   avisar = ()=>{};
-  Object.assign(st, {noTries:1, fecha:new Date(Date.now()+86400000*35), hora:'19:00', bebida:'Mate', lugar:''});
-  [p1,p2,segura,p4,p5,p6][VER-1]();
+  Object.assign(st, {noTries:1, fecha:new Date(2026,10,4), hora:'19:00', bebida:'Mate', lugar:'En la puerta de tu casa'});
+  [p1,p2,dijoNo,segura,()=>{segura();noSe();},()=>{st.fecha=null;st.hora=null;p4();},()=>{st.fecha=null;st.hora=null;p4();sinGanas();},()=>{p4();grisLibre=true;mover(1);st.fecha=new Date(2026,10,4);elegir(st.fecha.getFullYear(),st.fecha.getMonth(),st.fecha.getDate());document.querySelector('[data-h="19:00"]').click();},()=>{p5();document.querySelector('#beb [data-i="1"]').click();document.querySelector('#lug [data-l="En la puerta de tu casa"]').click();},p6][VER-1]();
 } else p1();
 </script>
 </body>
