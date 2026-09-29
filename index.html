@@ -332,25 +332,39 @@ function p5(){
   $('#lugar').oninput = e => st.lugar = e.target.value;
 }
 
-// 6 · aprobado
+// 8 · procesando… y el troll final
+const WA = '';   // celu de Yul con código de país, ej: 5491112345678 (vacío = WhatsApp elige contacto)
 function p6(){
   const fecha = st.fecha.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
   const lugar = st.lugar.trim() || 'donde diga la veterana';
+  avisar('Café con Alexia: eligió ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Intentos de NO: ${st.noTries}`);
   pantalla(8, `
-    <div class="stamp">APROBADO</div>
-    <div class="tag">✅ trámite resuelto</div>
-    <h1>Deuda saldada. Casi.</h1>
-    <div class="expte">
-      Cuándo: <b>${fecha}, ${st.hora} hs</b><br>
-      Qué: <b>${esc(st.bebida)}</b><br>
-      Dónde: <b>${esc(lugar)}</b><br>
-      Intentos de apretar NO: <b class="red">${st.noTries}</b><br>
-      Paga: <b>el vecino nuevo (por esta vez)</b>
-    </div>
-    <p>Ya me llegó todo. Si no aparezco, denunciame a la Junta.</p>
-    <p class="ps">PD: la gente normal manda un mensaje. Yo hice una web con un botón que se escapa. Cada uno con lo suyo.</p>
+    <div class="tag">⏳ procesando trámite</div>
+    <h1 id="proc">Sellando expediente…</h1>
+    <div class="bar" style="max-width:none;margin:18px 0 6px"><i id="pb" style="transition:width 2.6s linear"></i></div>
+    <p id="ptxt">Verificando firma de la vecina…</p>
   `);
-  avisar('Café con Alexia: confirmado ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Intentos de NO: ${st.noTries}`);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$('#pb').style.width='92%'));
+  setTimeout(()=>{ const t=$('#ptxt'); if(t) t.textContent='Consultando a la Junta…'; }, 1100);
+  setTimeout(()=>{
+    const txt = `Hola Yul, la Junta me derivó con vos 🙄\nCafé: ${fecha}, ${st.hora} hs\nTomo: ${st.bebida}\nLugar: ${lugar}`;
+    const link = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(txt);
+    app.innerHTML = `<div class="card">
+      <div class="stamp">DERIVADO</div>
+      <div class="tag">🙃 cambio de planes</div>
+      <h1>Ok sabés qué? No quiero que lo hagas por acá.</h1>
+      <p>Coordiná con Yul. La Junta no se hace cargo de cafés.</p>
+      <div class="expte">
+        Lo que elegiste: <b>${fecha}, ${st.hora} hs</b><br>
+        Tomás: <b>${esc(st.bebida)}</b><br>
+        Dónde: <b>${esc(lugar)}</b><br>
+        Intentos de apretar NO: <b class="red">${st.noTries}</b><br>
+        Tiempo perdido acá: <b>todo</b>
+      </div>
+      <div class="actions"><a class="btn" href="${link}" target="_blank" style="text-decoration:none">escribirle a Yul 💬</a></div>
+      <p class="ps">PD: la gente normal manda un mensaje. Yo hice una web para que al final me mandes un mensaje.</p>
+    </div>`;
+  }, 2900);
 }
 function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
