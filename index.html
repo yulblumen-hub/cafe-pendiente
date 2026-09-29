@@ -152,17 +152,16 @@ function p1(){
 function p2(){
   pantalla(2, `
     <div class="emoji">☕</div>
-    <h1>Café?</h1>
+    <h1>Café pendiente?</h1>
     <p>Un café. No es una cita, es un café. Relajá.</p>
     <div class="actions">
-      <button class="btn" onclick="dijoSi()">sí</button>
       <button class="btn ghost" onclick="dijoNo()">no</button>
     </div>
   `);
 }
 function dijoNo(){
   st.noTries++;
-  avisar('Alexia tocó NO 😅', 'Igual sigue adelante: no importa lo que elija.');
+  avisar('Alexia arrancó ☕', 'Tocó el NO (era el único botón).');
   p4();
 }
 function dijoSi(){
