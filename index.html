@@ -76,6 +76,7 @@
   .day:disabled{color:#cdbfaa;cursor:default}
   .day.today{outline:1.5px solid var(--terra);outline-offset:-2px}
   .day.sel{background:var(--green);color:#fff}
+  .day.gris{color:#bcae98;background:repeating-linear-gradient(-45deg,#efe6d6 0 4px,transparent 4px 8px)}
   .times{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
   .chip{appearance:none;border:1.5px solid transparent;background:var(--chip);color:var(--ink);font:500 14px Inter;padding:10px 14px;border-radius:12px;cursor:pointer}
   .chip.sel{border-color:var(--green);background:#e4efe8;color:var(--green)}
@@ -239,18 +240,20 @@ function p3(){
 }
 
 // 4 · cuándo
-let mesVista;
+let mesVista, grisHasta, grisToques = 0, grisLibre = false;
 function p4(){
   const hoy = new Date(); hoy.setHours(0,0,0,0);
   if(!mesVista){
     const quedan = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate() - hoy.getDate();
     mesVista = new Date(hoy.getFullYear(), hoy.getMonth() + (quedan < 7 ? 1 : 0), 1);
+    grisHasta = new Date(mesVista.getFullYear(), mesVista.getMonth()+1, 1); // el primer mes: Yul no tiene ganas
   }
   pantalla(6, `
     <div class="tag">📅 agenda vecinal</div>
     <h1>Cuándo estás libre?</h1>
     <p>Elegí día y hora. Yo me adapto, total ahora somos vecinos, no hay excusa de distancia.</p>
     <div class="cal" id="cal"></div>
+    <div class="psst" id="gris" style="margin-top:8px">en gris: días en los que Yul no tiene ganas</div>
     <div class="lbl">Hora</div>
     <div class="times" id="times"></div>
     <input type="time" id="otraHora" style="display:none">
@@ -288,9 +291,17 @@ function pintarCal(){
     const pasado = f < hoy;
     const sel = st.fecha && f.getTime()===st.fecha.getTime();
     const esHoy = f.getTime()===hoy.getTime();
-    h += `<button class="day ${sel?'sel':''} ${esHoy?'today':''}" ${pasado?'disabled':''} onclick="elegir(${y},${m},${d})">${d}</button>`;
+    const gris = !pasado && !grisLibre && f < grisHasta;
+    h += `<button class="day ${sel?'sel':''} ${esHoy?'today':''} ${gris?'gris':''}" ${pasado?'disabled':''} onclick="${gris?'sinGanas()':`elegir(${y},${m},${d})`}">${d}</button>`;
   }
   $('#cal').innerHTML = h + '</div>';
+}
+function sinGanas(){
+  const r = ['Ese día Yul no tiene ganas 😴','Ese tampoco. Está ocupado no teniendo ganas.','Todo el mes igual. Probá en el que viene 👉','Bueno mentira jaja. Elegí el que quieras 🙄'];
+  grisToques++;
+  $('#gris').textContent = r[Math.min(grisToques-1, r.length-1)];
+  const c = $('#cal'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+  if(grisToques >= 4){ grisLibre = true; pintarCal(); }
 }
 function mover(n){ mesVista = new Date(mesVista.getFullYear(), mesVista.getMonth()+n, 1); pintarCal(); }
 function elegir(y,m,d){ st.fecha = new Date(y,m,d); pintarCal(); chequear4(); }
