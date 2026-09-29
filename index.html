@@ -159,9 +159,9 @@ function p1(){
 const excusas = ['el NO está de vacaciones','el NO se mudó a Palermo','el NO no atiende los martes','el NO está en trámite','el NO fue a buscar medialunas','ya fue, el NO renunció'];
 function p2(){
   pantalla(2, `
-    <div class="tag">❤︎ una pregunta muy seria</div>
+    <div class="tag">☕ una pregunta muy seria</div>
     <h1>Saldamos la deuda con un café?</h1>
-    <p>Pensalo bien. Hay una respuesta correcta y otra que no funciona.</p>
+    <p>Un café. No es una cita, es un trámite vecinal. La Junta fue muy clara con eso.</p><p>Hay una respuesta correcta y otra que no funciona.</p>
     <div class="yesno" id="zona">
       <button class="btn" id="yes" onclick="dijoSi()">SÍ ☕</button>
       <button class="btn ghost" id="no">NO</button>
@@ -200,7 +200,7 @@ function segura(){
   pantalla(3, `
     <div class="emoji">🤨</div>
     <h1>Pará pará. Estás segura?</h1>
-    <p>Mirá que voy de verdad. No es un chiste. Bueno, esto sí, pero el café no.</p>
+    <p>Mirá que el café va en serio. Esto es un chiste, el café no.</p>
     <div class="actions">
       <button class="btn" onclick="segura2()">sí, segura</button>
       <button class="btn ghost" onclick="abogado(this)">lo tengo que consultar</button>
@@ -310,7 +310,7 @@ function chequear4(){ $('#sig4').disabled = !(st.fecha && st.hora); }
 // 5 · qué tomás + dónde
 const bebidas = [
   ['☕','Café'],['🧉','Mate'],['🍵','Té'],['🍫','Submarino'],
-  ['🥤','Licuado verde, soy de Recoleta'],['🍷','Esto no es un café, es un vino'],
+  ['🥤','Licuado verde, soy de Recoleta'],['🧾','Lo más caro de la carta'],
   ['🚰','Agua de la canilla, soy humilde'],['⏱️','Un cortado rápido, tengo cosas'],
   ['💸','Lo que sea, invitás vos']
 ];
