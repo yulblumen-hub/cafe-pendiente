@@ -100,6 +100,25 @@
   footer{margin-top:18px;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:1.6px;color:#b3a28c;text-transform:uppercase;text-align:center}
   .shake{animation:shake .35s}
   @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .sinmarco{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+  .wr{background:linear-gradient(160deg,#1f4d3a,#0f2a1f);color:#f4ede1;border-radius:22px;padding:34px 24px;min-height:460px;display:flex;flex-direction:column;justify-content:center;text-align:left}
+  .wr small{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:1.5px;color:#9fc4b1;text-transform:uppercase}
+  .wr .n{font:800 130px Fraunces,serif;line-height:.9;color:#f0b58f;margin:10px 0}
+  .wr p{color:#d8e6dd;font-size:15px}
+  .wr .pill{appearance:none;border:0;cursor:pointer;align-self:flex-start;background:#f0b58f;color:#1f2a22;font:700 14px Inter;border-radius:99px;padding:11px 18px;margin-top:18px}
+  .cap-box{border:1px solid #d9d9d9;border-radius:6px;background:#fff;text-align:left;overflow:hidden;box-shadow:0 12px 40px -18px rgba(60,40,20,.35)}
+  .cap-top{background:#4a90e2;color:#fff;padding:14px;font-size:13px;line-height:1.35}
+  .cap-top b{font-size:19px;display:block}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px}
+  .tile{appearance:none;border:0;cursor:pointer;aspect-ratio:1;background:#efe6d6;display:grid;place-items:center;font-size:34px;position:relative;transition:transform .12s}
+  .tile.s{outline:3px solid #4a90e2;outline-offset:-3px;transform:scale(.9)}
+  .tile.s::after{content:"✓";position:absolute;top:5px;left:5px;width:20px;height:20px;border-radius:50%;background:#4a90e2;color:#fff;font-size:12px;display:grid;place-items:center}
+  .cap-foot{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:12px;color:#777}
+  .cap-ok{appearance:none;border:0;cursor:pointer;background:#4a90e2;color:#fff;font:600 13px Inter;padding:9px 16px;border-radius:3px}
+  .tyc{text-align:left;max-height:190px;overflow-y:auto;background:#fbf5ea;border:1px dashed #d8c9b1;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.7;color:#5a4a3c;margin-top:10px}
+  .tyc b{color:var(--ink)}
+  .chk{display:flex;gap:10px;align-items:center;justify-content:center;font-size:14px;margin-top:14px;color:var(--ink);cursor:pointer}
+  .chk input{width:20px;height:20px;accent-color:var(--green)}
 </style>
 </head>
 <body>
@@ -117,7 +136,7 @@ const PRUEBA = /[?&]prueba/.test(location.search); // con ?prueba el aviso llega
 
 const $ = s => document.querySelector(s);
 const app = $('#app');
-const TOTAL = 5;
+const TOTAL = 8;
 const st = { noTries: 0, fecha: null, hora: null, bebida: null, lugar: '' };
 
 function avisar(titulo, texto){
@@ -144,13 +163,13 @@ function p1(){
     <h1>${NOMBRE}, tenemos un tema.</h1>
     <p>2 meses siendo vecinos.<br>Cafés tomados: <b style="color:var(--terra)">0</b>.</p>
     <p>Esto se arregla hoy.</p>
-    <div class="actions"><button class="btn" onclick="p2()">a ver</button></div>
+    <div class="actions"><button class="btn" onclick="anio()">a ver</button></div>
   `);
 }
 
 // 2 · la pregunta
 function p2(){
-  pantalla(2, `
+  pantalla(3, `
     <div class="emoji">☕</div>
     <h1>Café pendiente</h1>
     <div class="actions">
@@ -158,10 +177,71 @@ function p2(){
     </div>
   `);
 }
+// 2 · tu año en cafés
+function anio(){
+  pantalla(2, `
+    <div class="wr">
+      <small>tu ${new Date().getFullYear()} en cafés</small>
+      <p>Cafés tomados con tu vecino nuevo:</p>
+      <div class="n">0</div>
+      <p>Estás en el top 1% de vecinas que nunca tomaron un café.</p>
+      <p>Tu género favorito: “después vemos”.</p>
+      <button class="pill" onclick="p2()">cambiar esto →</button>
+    </div>
+  `);
+  app.firstElementChild.classList.add('sinmarco');
+}
+
+// 4 · captcha trucho
+const tiles = ['🪑','🥐','🌳','🚲','🐕','🏢','🌧️','🛒','📦'];
+function captcha(){
+  pantalla(4, `
+    <div class="cap-box">
+      <div class="cap-top">Seleccioná todas las imágenes con<b>cafés que tomamos juntos</b>Si no hay ninguna, tocá Verificar.</div>
+      <div class="tiles" id="tiles">${tiles.map(t=>`<button class="tile">${t}</button>`).join('')}</div>
+      <div class="cap-foot"><span>↻ 🎧 ⓘ</span><button class="cap-ok" onclick="verificar()">VERIFICAR</button></div>
+    </div>
+    <p id="capres" style="margin-top:14px;min-height:40px;text-align:center"></p>
+    <div class="actions" id="capsig" style="display:none;margin-top:6px"><button class="btn" onclick="terminos()">seguir</button></div>
+  `);
+  app.firstElementChild.classList.add('sinmarco');
+  $('#tiles').onclick = e => { const t = e.target.closest('.tile'); if(t) t.classList.toggle('s'); };
+}
+function verificar(){
+  const sel = document.querySelectorAll('#tiles .tile.s');
+  if(sel.length){
+    $('#capres').textContent = 'Incorrecto. En ninguna hay un café que tomamos juntos 🙄';
+    sel.forEach(t=>t.classList.remove('s'));
+    sacudir($('.cap-box'));
+  } else {
+    $('#capres').textContent = 'Correcto: 0 de 0. No sos un robot, solamente debés un café.';
+    $('#capsig').style.display = 'flex';
+  }
+}
+
+// 5 · términos y condiciones
+function terminos(){
+  pantalla(5, `
+    <h1 style="font-size:28px">Términos y condiciones</h1>
+    <div class="tyc">
+      <b>1.</b> El café no es negociable. El día sí.<br>
+      <b>2.</b> Si el café está frío, la culpa es del barista.<br>
+      <b>3.</b> Se permite hablar del clima un máximo de 3 minutos.<br>
+      <b>4.</b> Mirar el celular solo para mostrar memes.<br>
+      <b>5.</b> Si alguno llega tarde, paga las medialunas.<br>
+      <b>6.</b> “Después vemos” queda prohibido por ley.<br>
+      <b>7.</b> Este contrato se autodestruye después del café.<br>
+      <b>8.</b> Nadie leyó hasta acá.
+    </div>
+    <label class="chk"><input type="checkbox" id="lei" onchange="$('#acepto').disabled=!this.checked"> Leí todo (mentira)</label>
+    <div class="actions"><button class="btn" id="acepto" disabled onclick="p4()">acepto</button></div>
+  `);
+}
+
 function dijoNo(){
   st.noTries++;
   avisar('Alexia arrancó ☕', 'Tocó el NO (era el único botón).');
-  p4();
+  captcha();
 }
 function dijoSi(){
   avisar('Alexia dijo que SÍ ☕', 'Sin dudar.');
@@ -177,7 +257,7 @@ function p4(){
     mesVista = new Date(hoy.getFullYear(), hoy.getMonth() + (quedan < 7 ? 1 : 0), 1);
     grisHasta = new Date(mesVista.getFullYear(), mesVista.getMonth()+1, 1); // el primer mes: Yul no tiene ganas
   }
-  pantalla(3, `
+  pantalla(6, `
     <div class="emoji">📅</div>
     <h1>Cuándo?</h1>
     <p>Elegí día y hora. Yo tengo la agenda re libre (no le digas a nadie).</p>
@@ -256,7 +336,7 @@ const bebidas = [
 ];
 const lugares = [['📍','Cerca'],['📍📍','Más cerca'],['🚪','En la puerta de tu casa'],['🎲','Sorprendeme']];
 function p5(){
-  pantalla(4, `
+  pantalla(7, `
     <div class="emoji">🤔</div>
     <h1>Qué tomás?</h1>
     <div class="opts" id="beb">${bebidas.map((b,i)=>`<button class="chip ${i===bebidas.length-1?'wide':''}" data-i="${i}">${b[0]} ${b[1]}</button>`).join('')}</div>
@@ -287,7 +367,7 @@ function p6(){
   const fecha = st.fecha.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
   const lugar = st.lugar || 'lo elige Yul';
   avisar('Café con Alexia: eligió ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Veces que apretó NO: ${st.noTries}`);
-  pantalla(5, `
+  pantalla(8, `
     <div class="emoji">⏳</div>
     <h1>Guardando…</h1>
     <div class="bar" style="max-width:none;margin:18px 0 6px"><i id="pb" style="transition:width 2.4s linear"></i></div>
@@ -312,7 +392,7 @@ const VER = +(new URLSearchParams(location.search).get('ver')||0);
 if(VER){
   avisar = ()=>{};
   Object.assign(st, {noTries:1, fecha:new Date(2026,10,4), hora:'19:00', bebida:'Mate', lugar:'En la puerta de tu casa'});
-  [p1,p2,()=>{st.fecha=null;st.hora=null;p4();},()=>{st.fecha=null;st.hora=null;p4();sinGanas();},()=>{p4();grisLibre=true;mover(1);st.fecha=new Date(2026,10,4);elegir(2026,10,4);document.querySelector('[data-h="19:00"]').click();},()=>{p5();document.querySelector('#beb [data-i="1"]').click();document.querySelector('#lug [data-l="En la puerta de tu casa"]').click();},p6][VER-1]();
+  [p1,anio,p2,()=>{captcha();document.querySelector('.tile').click();verificar();},()=>{captcha();verificar();},()=>{terminos();document.querySelector('#lei').click();},()=>{st.fecha=null;st.hora=null;p4();},()=>{st.fecha=null;st.hora=null;p4();sinGanas();},()=>{p4();grisLibre=true;mover(1);st.fecha=new Date(2026,10,4);elegir(2026,10,4);document.querySelector('[data-h="19:00"]').click();},()=>{p5();document.querySelector('#beb [data-i="1"]').click();document.querySelector('#lug [data-l="En la puerta de tu casa"]').click();},p6][VER-1]();
 } else p1();
 </script>
 </body>
