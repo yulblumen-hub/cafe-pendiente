@@ -354,7 +354,15 @@ function p6(){
 }
 function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-p1();
+// ?ver=N abre directo la pantalla N con datos de ejemplo (sin avisos)
+const VER = +(new URLSearchParams(location.search).get('ver')||0);
+if(VER){
+  avisar = ()=>{};
+  Object.assign(st, {noTries:3, fecha:new Date(Date.now()+86400000*14), hora:'17:30', bebida:'Mate', lugar:'sorprendeme'});
+  [p1,p2,segura,segura2,p3,p4,p5,p6][VER-1]();
+  if(VER===2){ const n=$('#no'); n.style.left='190px'; n.style.top='70px'; $('#psst').textContent='el NO se mudó a Palermo'; }
+  if(VER===6){ st.fecha=null; st.hora=null; p4(); sinGanas(); }
+} else p1();
 </script>
 </body>
 </html>
