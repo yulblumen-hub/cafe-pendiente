@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Expediente N° 0001 · Café pendiente</title>
-<meta property="og:title" content="Expediente N° 0001 · Café pendiente">
-<meta property="og:description" content="Junta Vecinal de Recoleta. Trámite demorado hace 2 meses. Requiere tu firma.">
-<meta name="description" content="Junta Vecinal de Recoleta. Trámite demorado hace 2 meses. Requiere tu firma.">
+<title>Café pendiente ☕</title>
+<meta property="og:title" content="Café pendiente ☕">
+<meta property="og:description" content="Alexia, tenemos algo pendiente.">
+<meta name="description" content="Alexia, tenemos algo pendiente.">
 <meta name="theme-color" content="#f4ede1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,20 +103,21 @@
 </style>
 </head>
 <body>
-<header><div class="brand">Junta Vecinal <span>Recoleta</span></div><div class="step" id="step"></div></header>
+<header><div class="brand">café <span>pendiente</span></div><div class="step" id="step"></div></header>
 <div class="bar"><i id="bar"></i></div>
 <main id="app"></main>
-<footer>trámite n° 0001 · sin fecha de vencimiento (ya venció)</footer>
+<footer>hecho a mano · sin fines de lucro</footer>
 
 <script>
 // ===== ajustes =====
 const NOMBRE = 'Alexia';
 const NTFY = 'yul-cafe-8db6c76d';          // canal de ntfy donde te llega el aviso
+const WA = '';                              // celu de Yul con código de país, ej: 5491112345678 (vacío = WhatsApp elige contacto)
 const PRUEBA = /[?&]prueba/.test(location.search); // con ?prueba el aviso llega marcado como prueba
 
 const $ = s => document.querySelector(s);
 const app = $('#app');
-const TOTAL = 8;
+const TOTAL = 6;
 const st = { noTries: 0, fecha: null, hora: null, bebida: null, lugar: '' };
 
 function avisar(titulo, texto){
@@ -128,70 +129,49 @@ function avisar(titulo, texto){
     }).catch(()=>{});
   }catch(e){}
 }
-
 function pantalla(n, html){
   $('#step').textContent = n+' / '+TOTAL;
   $('#bar').style.width = (n/TOTAL*100)+'%';
   app.innerHTML = '<div class="card">'+html+'</div>';
   window.scrollTo(0,0);
 }
+function sacudir(el){ el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
 
-// 1 · el problema
+// 1 · arranque
 function p1(){
   pantalla(1, `
-    <div class="tag">⚠️ aviso importante</div>
-    <h1>${NOMBRE}, tenemos un problema.</h1>
-    <p>Hace 2 meses me diste la bienvenida al barrio por Instagram.</p>
-    <div class="expte">
-      Bienvenida recibida: <b>sí ✓</b><br>
-      Vecino mudado: <b>sí ✓</b><br>
-      Cafés tomados: <b class="red">0</b><br>
-      Días de demora: <b class="red">~60</b><br>
-      Estado: <b class="red">escandaloso</b><br>
-      Culpable: <b>a determinar (fuiste vos)</b>
-    </div>
-    <p>La Junta Vecinal ya se enteró. Hay vecinas hablando.</p>
-    <div class="actions"><button class="btn" onclick="p2()">uh. qué hacemos</button></div>
+    <div class="emoji">👀</div>
+    <h1>${NOMBRE}, tenemos un tema.</h1>
+    <p>2 meses siendo vecinos.<br>Cafés tomados: <b style="color:var(--terra)">0</b>.</p>
+    <p>Esto se arregla hoy.</p>
+    <div class="actions"><button class="btn" onclick="p2()">a ver</button></div>
   `);
 }
 
 // 2 · la pregunta
-const excusas = ['el NO está de vacaciones','el NO se mudó a Palermo','el NO no atiende los martes','el NO está en trámite','el NO fue a buscar medialunas','ya fue, el NO renunció'];
 function p2(){
   pantalla(2, `
-    <div class="tag">☕ una pregunta muy seria</div>
-    <h1>Saldamos la deuda con un café?</h1>
-    <p>Un café. No es una cita, es un trámite vecinal. La Junta fue muy clara con eso.</p><p>Hay una respuesta correcta y otra que no funciona.</p>
-    <div class="yesno" id="zona">
-      <button class="btn" id="yes" onclick="dijoSi()">SÍ ☕</button>
-      <button class="btn ghost" id="no">NO</button>
+    <div class="emoji">☕</div>
+    <h1>Café?</h1>
+    <p>Un café. No es una cita, es un café. Relajá.</p>
+    <div class="actions">
+      <button class="btn" onclick="dijoSi()">sí</button>
+      <button class="btn ghost" onclick="dijoNo()">no</button>
     </div>
-    <div class="psst" id="psst">psst… el botón NO es medio tímido</div>
   `);
-  const no = $('#no'), zona = $('#zona');
-  const huir = e => {
-    if(e){ e.preventDefault(); }
-    st.noTries++;
-    // salta a otro lugar de la zona, lejos de donde estaba y sin tapar el SÍ
-    const W = zona.clientWidth - no.offsetWidth, yes = $('#yes');
-    let x, y, n = 0;
-    do{
-      x = Math.random()*W; y = Math.random()*90;
-      n++;
-    }while(n < 50 && (Math.abs(x - no.offsetLeft) < 60 ||
-      (x < yes.offsetLeft + yes.offsetWidth + 16 && x + no.offsetWidth > yes.offsetLeft - 16 &&
-       y < yes.offsetTop + yes.offsetHeight + 16 && y + no.offsetHeight > yes.offsetTop - 16)));
-    no.style.left = x+'px';
-    no.style.top = y+'px';
-    $('#psst').textContent = excusas[Math.min(st.noTries-1, excusas.length-1)];
-    if(st.noTries >= 6){ no.style.transform = 'scale(.6)'; no.textContent = 'no?'; }
-  };
-  no.addEventListener('mouseenter', huir);
-  no.addEventListener('touchstart', huir, {passive:false});
-  no.addEventListener('click', huir);
+}
+function dijoNo(){
+  st.noTries++;
+  pantalla(2, `
+    <div class="emoji">😐</div>
+    <h1>Ok.</h1>
+    <p id="resp">Respeto tu decisión.</p>
+    <div class="actions" id="acc" style="visibility:hidden"><button class="btn" onclick="dijoSi()">bueno dale, sí</button></div>
+  `);
+  setTimeout(()=>{ const r=$('#resp'); if(r){ r.innerHTML='Mentira, no la respeto.'; $('#acc').style.visibility='visible'; } }, 1600);
 }
 function dijoSi(){
-  avisar('Alexia dijo que SÍ ☕', st.noTries ? `Antes intentó apretar NO ${st.noTries} ${st.noTries===1?'vez':'veces'} 😅` : 'Sin dudar, ni tocó el NO.');
+  avisar('Alexia dijo que SÍ ☕', st.noTries ? `Antes apretó NO ${st.noTries} ${st.noTries===1?'vez':'veces'} 😅` : 'Sin dudar, ni tocó el NO.');
   segura();
 }
 
@@ -199,44 +179,25 @@ function dijoSi(){
 function segura(){
   pantalla(3, `
     <div class="emoji">🤨</div>
-    <h1>Pará pará. Estás segura?</h1>
-    <p>Mirá que el café va en serio. Esto es un chiste, el café no.</p>
+    <h1>Estás segura?</h1>
+    <p>Mirá que después no hay vuelta atrás.</p>
     <div class="actions">
-      <button class="btn" onclick="segura2()">sí, segura</button>
-      <button class="btn ghost" onclick="abogado(this)">lo tengo que consultar</button>
+      <button class="btn" onclick="p4()">sí</button>
+      <button class="btn ghost" id="nose" onclick="noSe()">no sé</button>
     </div>
-    <div class="psst" id="psst"></div>
+    <p id="cuenta" style="margin-top:14px;min-height:22px"></p>
   `);
 }
-function abogado(b){
-  const r = ['Ya lo consultaste 2 meses.','Tu abogado dijo que sí.','Tu abogado también quiere café.'];
-  st.dudas = (st.dudas||0) + 1;
-  $('#psst').textContent = r[Math.min(st.dudas-1, r.length-1)];
-  b.closest('.card').classList.remove('shake'); void b.offsetWidth; b.closest('.card').classList.add('shake');
-  if(st.dudas >= 3){ b.textContent = 'sí, segura'; b.className = 'btn'; b.onclick = segura2; }
-}
-
-// 4 · segura segura?
-function segura2(){
-  pantalla(4, `
-    <div class="emoji">🧐</div>
-    <h1>Segura segura?</h1>
-    <p>Última vez que pregunto. Después no hay vuelta atrás, queda en el expediente.</p>
-    <div class="actions" style="flex-direction:column;align-items:center">
-      <button class="btn" onclick="p3()">SÍ. dale.</button>
-      <button class="btn ghost" style="font-size:12px;padding:10px 18px" onclick="p3()">sí pero dicho con cara de fastidio</button>
-    </div>
-  `);
-}
-
-// 3 · alivio
-function p3(){
-  pantalla(5, `
-    <div class="emoji">🎉</div>
-    <h1>Uf. Ya tenía redactada la denuncia.</h1>
-    <p>${st.noTries>=3 ? `Igual vi que intentaste apretar NO ${st.noTries} veces. Quedó registrado en el expediente.` : 'Casi llamo a la Junta. Bueno, la Junta soy yo.'}</p>
-    <div class="actions"><button class="btn" onclick="p4()">ok, organicemos esto →</button></div>
-  `);
+function noSe(){
+  $('#nose').disabled = true;
+  let n = 5;
+  const c = $('#cuenta');
+  const tick = () => {
+    if(!$('#cuenta')) return;
+    if(n > 0){ c.textContent = `ok, tenés ${n} segundos para pensarlo`; n--; setTimeout(tick, 1000); }
+    else { c.textContent = 'listo, eso es un sí'; setTimeout(p4, 1100); }
+  };
+  tick();
 }
 
 // 4 · cuándo
@@ -248,32 +209,44 @@ function p4(){
     mesVista = new Date(hoy.getFullYear(), hoy.getMonth() + (quedan < 7 ? 1 : 0), 1);
     grisHasta = new Date(mesVista.getFullYear(), mesVista.getMonth()+1, 1); // el primer mes: Yul no tiene ganas
   }
-  pantalla(6, `
-    <div class="tag">📅 agenda vecinal</div>
-    <h1>Cuándo estás libre?</h1>
-    <p>Elegí día y hora. Yo me adapto, total ahora somos vecinos, no hay excusa de distancia.</p>
+  pantalla(4, `
+    <div class="emoji">📅</div>
+    <h1>Cuándo?</h1>
+    <p>Elegí día y hora.</p>
     <div class="cal" id="cal"></div>
     <div class="psst" id="gris" style="margin-top:8px">en gris: días en los que Yul no tiene ganas</div>
     <div class="lbl">Hora</div>
     <div class="times" id="times"></div>
-    <input type="time" id="otraHora" style="display:none">
-    <div class="actions"><button class="btn" id="sig4" disabled onclick="p5()">siguiente: qué tomás →</button></div>
+    <input type="time" id="otraHora" style="display:none" step="900">
+    <div class="actions"><button class="btn" id="sig4" disabled onclick="p5()">siguiente</button></div>
   `);
   pintarCal();
-  const horas = ['10:00','12:00','16:00','17:30','19:00','otra'];
-  $('#times').innerHTML = horas.map(h=>`<button class="chip" data-h="${h}">${h==='otra'?'otra hora':h}</button>`).join('');
-  $('#times').onclick = e => {
+  pintarHoras();
+  $('#otraHora').oninput = e => {
+    const v = e.target.value;
+    st.hora = v && v >= horaMin() ? v : null;
+    if(v && v < horaMin()) $('#gris').textContent = 'entre semana Yul labura, desde las 18 😅';
+    chequear4();
+  };
+}
+function finde(){ return st.fecha && (st.fecha.getDay()===0 || st.fecha.getDay()===6); }
+function horaMin(){ return finde() ? '09:00' : '18:00'; }
+function pintarHoras(){
+  const t = $('#times');
+  if(!st.fecha){ t.innerHTML = '<span class="psst">elegí un día primero</span>'; return; }
+  const horas = finde() ? ['10:00','12:00','16:00','18:00','20:00'] : ['18:00','19:00','20:00','21:00'];
+  if(st.hora && !horas.includes(st.hora) && st.hora < horaMin()) st.hora = null;
+  t.innerHTML = [...horas,'otra'].map(h=>`<button class="chip ${st.hora===h?'sel':''}" data-h="${h}">${h==='otra'?'otra hora':h}</button>`).join('');
+  $('#otraHora').min = horaMin();
+  t.onclick = e => {
     const b = e.target.closest('.chip'); if(!b) return;
-    document.querySelectorAll('#times .chip').forEach(c=>c.classList.remove('sel'));
+    t.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));
     b.classList.add('sel');
     const oh = $('#otraHora');
-    if(b.dataset.h==='otra'){ oh.style.display='block'; oh.focus(); st.hora = oh.value || null; }
+    if(b.dataset.h==='otra'){ oh.style.display='block'; oh.focus(); st.hora = oh.value && oh.value>=horaMin() ? oh.value : null; }
     else { oh.style.display='none'; st.hora = b.dataset.h; }
     chequear4();
   };
-  $('#otraHora').oninput = e => { st.hora = e.target.value || null; chequear4(); };
-  if(st.hora){ const b=document.querySelector(`#times [data-h="${st.hora}"]`); if(b) b.classList.add('sel'); }
-  chequear4();
 }
 function pintarCal(){
   const hoy = new Date(); hoy.setHours(0,0,0,0);
@@ -297,32 +270,26 @@ function pintarCal(){
   $('#cal').innerHTML = h + '</div>';
 }
 function sinGanas(){
-  const r = ['Ese día Yul no tiene ganas 😴','Ese tampoco. Está ocupado no teniendo ganas.','Todo el mes igual. Probá en el que viene 👉','Bueno mentira jaja. Elegí el que quieras 🙄'];
+  const r = ['ese día Yul no tiene ganas 😴','ese tampoco','todo el mes igual, probá el que viene 👉','bueno mentira jaja, elegí el que quieras 🙄'];
   grisToques++;
   $('#gris').textContent = r[Math.min(grisToques-1, r.length-1)];
-  const c = $('#cal'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+  sacudir($('#cal'));
   if(grisToques >= 4){ grisLibre = true; pintarCal(); }
 }
 function mover(n){ mesVista = new Date(mesVista.getFullYear(), mesVista.getMonth()+n, 1); pintarCal(); }
-function elegir(y,m,d){ st.fecha = new Date(y,m,d); pintarCal(); chequear4(); }
+function elegir(y,m,d){ st.fecha = new Date(y,m,d); pintarCal(); pintarHoras(); chequear4(); }
 function chequear4(){ $('#sig4').disabled = !(st.fecha && st.hora); }
 
 // 5 · qué tomás + dónde
-const bebidas = [
-  ['☕','Café'],['🧉','Mate'],['🍵','Té'],['🍫','Submarino'],
-  ['🥤','Licuado verde, soy de Recoleta'],['🧾','Lo más caro de la carta'],
-  ['🚰','Agua de la canilla, soy humilde'],['⏱️','Un cortado rápido, tengo cosas'],
-  ['💸','Lo que sea, invitás vos']
-];
+const bebidas = [['☕','Café'],['🧉','Mate'],['🍵','Té'],['🥤','Algo frío'],['💸','Lo que sea, total invitás vos']];
 function p5(){
-  pantalla(7, `
-    <div class="tag">🔎 investigación de campo</div>
+  pantalla(5, `
+    <div class="emoji">🤔</div>
     <h1>Qué tomás?</h1>
-    <p>Dato que la Junta desconoce. 2 meses de vecinos y no sé esto. Vergonzoso.</p>
     <div class="opts" id="beb">${bebidas.map((b,i)=>`<button class="chip ${i===bebidas.length-1?'wide':''}" data-b="${b[1]}">${b[0]} ${b[1]}</button>`).join('')}</div>
-    <div class="lbl">Dónde? Vos sos la veterana del barrio, elegí vos</div>
-    <input type="text" id="lugar" placeholder="tu lugar favorito de Recoleta (o 'sorprendeme')" maxlength="80" value="${st.lugar}">
-    <div class="actions"><button class="btn" id="sig5" disabled onclick="p6()">firmar el trámite →</button></div>
+    <div class="lbl">Dónde? (si no se te ocurre, dejalo vacío)</div>
+    <input type="text" id="lugar" placeholder="algún lugar que te guste" maxlength="80" value="${esc(st.lugar)}">
+    <div class="actions"><button class="btn" id="sig5" disabled onclick="p6()">listo</button></div>
   `);
   $('#beb').onclick = e => {
     const b = e.target.closest('.chip'); if(!b) return;
@@ -332,39 +299,34 @@ function p5(){
   $('#lugar').oninput = e => st.lugar = e.target.value;
 }
 
-// 8 · procesando… y el troll final
-const WA = '';   // celu de Yul con código de país, ej: 5491112345678 (vacío = WhatsApp elige contacto)
+// 6 · cargando… y el troll final
 function p6(){
   const fecha = st.fecha.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
-  const lugar = st.lugar.trim() || 'donde diga la veterana';
-  avisar('Café con Alexia: eligió ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Intentos de NO: ${st.noTries}`);
-  pantalla(8, `
-    <div class="tag">⏳ procesando trámite</div>
-    <h1 id="proc">Sellando expediente…</h1>
-    <div class="bar" style="max-width:none;margin:18px 0 6px"><i id="pb" style="transition:width 2.6s linear"></i></div>
-    <p id="ptxt">Verificando firma de la vecina…</p>
+  const lugar = st.lugar.trim() || 'lo elige Yul';
+  avisar('Café con Alexia: eligió ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Veces que apretó NO: ${st.noTries}`);
+  pantalla(6, `
+    <div class="emoji">⏳</div>
+    <h1>Guardando…</h1>
+    <div class="bar" style="max-width:none;margin:18px 0 6px"><i id="pb" style="transition:width 2.4s linear"></i></div>
   `);
   requestAnimationFrame(()=>requestAnimationFrame(()=>$('#pb').style.width='92%'));
-  setTimeout(()=>{ const t=$('#ptxt'); if(t) t.textContent='Consultando a la Junta…'; }, 1100);
   setTimeout(()=>{
-    const txt = `Hola Yul, la Junta me derivó con vos 🙄\nCafé: ${fecha}, ${st.hora} hs\nTomo: ${st.bebida}\nLugar: ${lugar}`;
+    const txt = `Hola Yul, la web me mandó a hablar con vos 🙄\nCafé: ${fecha}, ${st.hora} hs\nTomo: ${st.bebida}\nLugar: ${lugar}`;
     const link = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(txt);
     app.innerHTML = `<div class="card">
-      <div class="stamp">DERIVADO</div>
-      <div class="tag">🙃 cambio de planes</div>
+      <div class="emoji">🙃</div>
       <h1>Ok sabés qué? No quiero que lo hagas por acá.</h1>
-      <p>Coordiná con Yul. La Junta no se hace cargo de cafés.</p>
+      <p>Coordiná con Yul.</p>
       <div class="expte">
-        Lo que elegiste: <b>${fecha}, ${st.hora} hs</b><br>
+        Día: <b>${fecha}, ${st.hora} hs</b><br>
         Tomás: <b>${esc(st.bebida)}</b><br>
         Dónde: <b>${esc(lugar)}</b><br>
-        Intentos de apretar NO: <b class="red">${st.noTries}</b><br>
-        Tiempo perdido acá: <b>todo</b>
+        Veces que tocaste NO: <b class="red">${st.noTries}</b>
       </div>
       <div class="actions"><a class="btn" href="${link}" target="_blank" style="text-decoration:none">escribirle a Yul 💬</a></div>
       <p class="ps">PD: la gente normal manda un mensaje. Yo hice una web para que al final me mandes un mensaje.</p>
     </div>`;
-  }, 2900);
+  }, 2700);
 }
 function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
@@ -372,10 +334,8 @@ function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;'
 const VER = +(new URLSearchParams(location.search).get('ver')||0);
 if(VER){
   avisar = ()=>{};
-  Object.assign(st, {noTries:3, fecha:new Date(Date.now()+86400000*14), hora:'17:30', bebida:'Mate', lugar:'sorprendeme'});
-  [p1,p2,segura,segura2,p3,p4,p5,p6][VER-1]();
-  if(VER===2){ const n=$('#no'); n.style.left='190px'; n.style.top='70px'; $('#psst').textContent='el NO se mudó a Palermo'; }
-  if(VER===6){ st.fecha=null; st.hora=null; p4(); sinGanas(); }
+  Object.assign(st, {noTries:1, fecha:new Date(Date.now()+86400000*35), hora:'19:00', bebida:'Mate', lugar:''});
+  [p1,p2,segura,p4,p5,p6][VER-1]();
 } else p1();
 </script>
 </body>
