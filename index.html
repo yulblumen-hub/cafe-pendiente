@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Expediente N° 0001 · Café pendiente</title>
+<meta property="og:title" content="Expediente N° 0001 · Café pendiente">
+<meta property="og:description" content="Junta Vecinal de Recoleta. Trámite demorado hace 2 meses. Requiere tu firma.">
+<meta name="description" content="Junta Vecinal de Recoleta. Trámite demorado hace 2 meses. Requiere tu firma.">
+<meta name="theme-color" content="#f4ede1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4ede1; --card:#fffaf2; --ink:#2a1f17; --muted:#7a6a5c;
+    --green:#1f4d3a; --green-2:#2f6b52; --terra:#c4552d; --line:#e6dccb;
+    --chip:#f3eadb; --stamp:#b3261e;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg);
+    background-image:radial-gradient(circle at 20% 0%, #fbf3e4 0, transparent 50%),radial-gradient(circle at 100% 100%, #efe2cc 0, transparent 45%);
+    color:var(--ink);font-family:Inter,system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;
+    padding:max(18px,env(safe-area-inset-top)) 16px 24px;
+    min-height:100dvh;overflow-x:hidden;
+  }
+  header{width:100%;max-width:440px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .brand{font-family:Fraunces,serif;font-weight:800;font-size:15px;color:var(--green);letter-spacing:.2px}
+  .brand span{color:var(--terra)}
+  .step{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+  .bar{width:100%;max-width:440px;height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:18px}
+  .bar i{display:block;height:100%;background:var(--terra);width:0;transition:width .5s ease}
+  main{width:100%;max-width:440px;flex:1;display:flex;flex-direction:column}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:22px;
+    padding:30px 22px 26px;box-shadow:0 12px 40px -18px rgba(60,40,20,.35);
+    position:relative;text-align:center;animation:in .45s ease both;
+  }
+  @keyframes in{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+  .tag{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--terra);margin-bottom:12px}
+  h1{font-family:Fraunces,serif;font-weight:800;font-size:clamp(30px,8.6vw,40px);line-height:1.02;letter-spacing:-1px;margin:0 0 12px;color:var(--ink)}
+  p{margin:0 0 8px;color:var(--muted);font-size:14.5px;line-height:1.5}
+  .emoji{font-size:40px;width:72px;height:72px;display:grid;place-items:center;margin:0 auto 14px;background:var(--chip);border-radius:20px}
+  .btn{
+    appearance:none;border:0;cursor:pointer;font:600 15px Inter,sans-serif;
+    background:var(--green);color:#fff;padding:14px 26px;border-radius:999px;
+    box-shadow:0 8px 20px -8px rgba(31,77,58,.6);transition:transform .15s,opacity .2s;
+  }
+  .btn:active{transform:scale(.96)}
+  .btn[disabled]{opacity:.35;pointer-events:none}
+  .btn.ghost{background:#ece3d4;color:var(--ink);box-shadow:none}
+  .actions{margin-top:22px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+  .yesno{position:relative;height:130px;margin-top:18px}
+  .yesno .btn{position:absolute;top:30px}
+  #yes{left:calc(50% - 118px)} #no{left:calc(50% + 12px);transition:left .25s ease,top .25s ease,transform .15s}
+  .psst{font-size:11.5px;color:var(--muted);opacity:.8;min-height:18px;margin-top:4px}
+  .expte{
+    text-align:left;background:#fbf5ea;border:1px dashed #d8c9b1;border-radius:14px;padding:14px 16px;margin:16px 0 4px;
+    font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.75;color:#5a4a3c
+  }
+  .expte b{color:var(--ink);font-weight:500}
+  .expte .red{color:var(--stamp)}
+  /* calendario */
+  .cal{margin-top:16px;text-align:left}
+  .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .cal-head b{font-family:Fraunces,serif;font-size:18px}
+  .cal-head b::first-letter{text-transform:uppercase}
+  .nav{appearance:none;border:1px solid var(--line);background:#fff;border-radius:10px;width:34px;height:34px;font-size:16px;cursor:pointer;color:var(--ink)}
+  .nav[disabled]{opacity:.3}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .dow{font-size:10.5px;text-align:center;color:var(--muted);padding:4px 0;font-weight:600}
+  .day{appearance:none;border:0;background:transparent;aspect-ratio:1;border-radius:12px;font:500 14px Inter;color:var(--ink);cursor:pointer}
+  .day:disabled{color:#cdbfaa;cursor:default}
+  .day.today{outline:1.5px solid var(--terra);outline-offset:-2px}
+  .day.sel{background:var(--green);color:#fff}
+  .times{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
+  .chip{appearance:none;border:1.5px solid transparent;background:var(--chip);color:var(--ink);font:500 14px Inter;padding:10px 14px;border-radius:12px;cursor:pointer}
+  .chip.sel{border-color:var(--green);background:#e4efe8;color:var(--green)}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+  .opts .chip{text-align:left;padding:13px 12px;font-size:14px}
+  .opts .chip.wide{grid-column:1/-1}
+  input[type=text],input[type=time]{
+    width:100%;margin-top:14px;padding:14px;border-radius:12px;border:1.5px solid var(--line);
+    background:#fff;font:500 15px Inter;color:var(--ink);outline:none
+  }
+  input:focus{border-color:var(--green)}
+  .lbl{font-size:12px;font-weight:600;color:var(--muted);margin-top:16px;text-align:left}
+  .stamp{
+    position:absolute;right:-6px;top:-16px;transform:rotate(12deg);background:var(--card);
+    border:3px solid var(--stamp);color:var(--stamp);border-radius:10px;padding:4px 10px;
+    font:800 16px Fraunces,serif;letter-spacing:1px;opacity:0;
+    animation:stamp .5s .35s cubic-bezier(.2,1.6,.4,1) forwards;
+  }
+  @keyframes stamp{from{opacity:0;transform:rotate(12deg) scale(2.4)}to{opacity:.9;transform:rotate(12deg) scale(1)}}
+  .ps{font-size:12.5px;font-style:italic;margin-top:14px}
+  footer{margin-top:18px;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:1.6px;color:#b3a28c;text-transform:uppercase;text-align:center}
+  .shake{animation:shake .35s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+</style>
+</head>
+<body>
+<header><div class="brand">Junta Vecinal <span>Recoleta</span></div><div class="step" id="step"></div></header>
+<div class="bar"><i id="bar"></i></div>
+<main id="app"></main>
+<footer>trámite n° 0001 · sin fecha de vencimiento (ya venció)</footer>
+
+<script>
+// ===== ajustes =====
+const NOMBRE = 'Alexia';
+const NTFY = 'yul-cafe-8db6c76d';          // canal de ntfy donde te llega el aviso
+const PRUEBA = /[?&]prueba/.test(location.search); // con ?prueba el aviso llega marcado como prueba
+
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const TOTAL = 8;
+const st = { noTries: 0, fecha: null, hora: null, bebida: null, lugar: '' };
+
+function avisar(titulo, texto){
+  try{
+    fetch('https://ntfy.sh/', {
+      method:'POST',
+      body: JSON.stringify({ topic:NTFY, title:(PRUEBA?'[PRUEBA] ':'')+titulo, message:texto, tags:['coffee'] }),
+      keepalive:true
+    }).catch(()=>{});
+  }catch(e){}
+}
+
+function pantalla(n, html){
+  $('#step').textContent = n+' / '+TOTAL;
+  $('#bar').style.width = (n/TOTAL*100)+'%';
+  app.innerHTML = '<div class="card">'+html+'</div>';
+  window.scrollTo(0,0);
+}
+
+// 1 · el problema
+function p1(){
+  pantalla(1, `
+    <div class="tag">⚠️ aviso importante</div>
+    <h1>${NOMBRE}, tenemos un problema.</h1>
+    <p>Hace 2 meses me diste la bienvenida al barrio por Instagram.</p>
+    <div class="expte">
+      Bienvenida recibida: <b>sí ✓</b><br>
+      Vecino mudado: <b>sí ✓</b><br>
+      Cafés tomados: <b class="red">0</b><br>
+      Días de demora: <b class="red">~60</b><br>
+      Estado: <b class="red">escandaloso</b><br>
+      Culpable: <b>a determinar (fuiste vos)</b>
+    </div>
+    <p>La Junta Vecinal ya se enteró. Hay vecinas hablando.</p>
+    <div class="actions"><button class="btn" onclick="p2()">uh. qué hacemos</button></div>
+  `);
+}
+
+// 2 · la pregunta
+const excusas = ['el NO está de vacaciones','el NO se mudó a Palermo','el NO no atiende los martes','el NO está en trámite','el NO fue a buscar medialunas','ya fue, el NO renunció'];
+function p2(){
+  pantalla(2, `
+    <div class="tag">❤︎ una pregunta muy seria</div>
+    <h1>Saldamos la deuda con un café?</h1>
+    <p>Pensalo bien. Hay una respuesta correcta y otra que no funciona.</p>
+    <div class="yesno" id="zona">
+      <button class="btn" id="yes" onclick="dijoSi()">SÍ ☕</button>
+      <button class="btn ghost" id="no">NO</button>
+    </div>
+    <div class="psst" id="psst">psst… el botón NO es medio tímido</div>
+  `);
+  const no = $('#no'), zona = $('#zona');
+  const huir = e => {
+    if(e){ e.preventDefault(); }
+    st.noTries++;
+    // salta a otro lugar de la zona, lejos de donde estaba y sin tapar el SÍ
+    const W = zona.clientWidth - no.offsetWidth, yes = $('#yes');
+    let x, y, n = 0;
+    do{
+      x = Math.random()*W; y = Math.random()*90;
+      n++;
+    }while(n < 50 && (Math.abs(x - no.offsetLeft) < 60 ||
+      (x < yes.offsetLeft + yes.offsetWidth + 16 && x + no.offsetWidth > yes.offsetLeft - 16 &&
+       y < yes.offsetTop + yes.offsetHeight + 16 && y + no.offsetHeight > yes.offsetTop - 16)));
+    no.style.left = x+'px';
+    no.style.top = y+'px';
+    $('#psst').textContent = excusas[Math.min(st.noTries-1, excusas.length-1)];
+    if(st.noTries >= 6){ no.style.transform = 'scale(.6)'; no.textContent = 'no?'; }
+  };
+  no.addEventListener('mouseenter', huir);
+  no.addEventListener('touchstart', huir, {passive:false});
+  no.addEventListener('click', huir);
+}
+function dijoSi(){
+  avisar('Alexia dijo que SÍ ☕', st.noTries ? `Antes intentó apretar NO ${st.noTries} ${st.noTries===1?'vez':'veces'} 😅` : 'Sin dudar, ni tocó el NO.');
+  segura();
+}
+
+// 3 · estás segura?
+function segura(){
+  pantalla(3, `
+    <div class="emoji">🤨</div>
+    <h1>Pará pará. Estás segura?</h1>
+    <p>Mirá que voy de verdad. No es un chiste. Bueno, esto sí, pero el café no.</p>
+    <div class="actions">
+      <button class="btn" onclick="segura2()">sí, segura</button>
+      <button class="btn ghost" onclick="abogado(this)">lo tengo que consultar</button>
+    </div>
+    <div class="psst" id="psst"></div>
+  `);
+}
+function abogado(b){
+  const r = ['Ya lo consultaste 2 meses.','Tu abogado dijo que sí.','Tu abogado también quiere café.'];
+  st.dudas = (st.dudas||0) + 1;
+  $('#psst').textContent = r[Math.min(st.dudas-1, r.length-1)];
+  b.closest('.card').classList.remove('shake'); void b.offsetWidth; b.closest('.card').classList.add('shake');
+  if(st.dudas >= 3){ b.textContent = 'sí, segura'; b.className = 'btn'; b.onclick = segura2; }
+}
+
+// 4 · segura segura?
+function segura2(){
+  pantalla(4, `
+    <div class="emoji">🧐</div>
+    <h1>Segura segura?</h1>
+    <p>Última vez que pregunto. Después no hay vuelta atrás, queda en el expediente.</p>
+    <div class="actions" style="flex-direction:column;align-items:center">
+      <button class="btn" onclick="p3()">SÍ. dale.</button>
+      <button class="btn ghost" style="font-size:12px;padding:10px 18px" onclick="p3()">sí pero dicho con cara de fastidio</button>
+    </div>
+  `);
+}
+
+// 3 · alivio
+function p3(){
+  pantalla(5, `
+    <div class="emoji">🎉</div>
+    <h1>Uf. Ya tenía redactada la denuncia.</h1>
+    <p>${st.noTries>=3 ? `Igual vi que intentaste apretar NO ${st.noTries} veces. Quedó registrado en el expediente.` : 'Casi llamo a la Junta. Bueno, la Junta soy yo.'}</p>
+    <div class="actions"><button class="btn" onclick="p4()">ok, organicemos esto →</button></div>
+  `);
+}
+
+// 4 · cuándo
+let mesVista;
+function p4(){
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  if(!mesVista){
+    const quedan = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate() - hoy.getDate();
+    mesVista = new Date(hoy.getFullYear(), hoy.getMonth() + (quedan < 7 ? 1 : 0), 1);
+  }
+  pantalla(6, `
+    <div class="tag">📅 agenda vecinal</div>
+    <h1>Cuándo estás libre?</h1>
+    <p>Elegí día y hora. Yo me adapto, total ahora somos vecinos, no hay excusa de distancia.</p>
+    <div class="cal" id="cal"></div>
+    <div class="lbl">Hora</div>
+    <div class="times" id="times"></div>
+    <input type="time" id="otraHora" style="display:none">
+    <div class="actions"><button class="btn" id="sig4" disabled onclick="p5()">siguiente: qué tomás →</button></div>
+  `);
+  pintarCal();
+  const horas = ['10:00','12:00','16:00','17:30','19:00','otra'];
+  $('#times').innerHTML = horas.map(h=>`<button class="chip" data-h="${h}">${h==='otra'?'otra hora':h}</button>`).join('');
+  $('#times').onclick = e => {
+    const b = e.target.closest('.chip'); if(!b) return;
+    document.querySelectorAll('#times .chip').forEach(c=>c.classList.remove('sel'));
+    b.classList.add('sel');
+    const oh = $('#otraHora');
+    if(b.dataset.h==='otra'){ oh.style.display='block'; oh.focus(); st.hora = oh.value || null; }
+    else { oh.style.display='none'; st.hora = b.dataset.h; }
+    chequear4();
+  };
+  $('#otraHora').oninput = e => { st.hora = e.target.value || null; chequear4(); };
+  if(st.hora){ const b=document.querySelector(`#times [data-h="${st.hora}"]`); if(b) b.classList.add('sel'); }
+  chequear4();
+}
+function pintarCal(){
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const y = mesVista.getFullYear(), m = mesVista.getMonth();
+  const primero = new Date(y,m,1), dias = new Date(y,m+1,0).getDate();
+  const offset = (primero.getDay()+6)%7; // lunes primero
+  const esMesActual = y===hoy.getFullYear() && m===hoy.getMonth();
+  let h = `<div class="cal-head"><button class="nav" ${esMesActual?'disabled':''} onclick="mover(-1)">‹</button>
+    <b>${primero.toLocaleDateString('es-AR',{month:'long'})+' '+y}</b>
+    <button class="nav" onclick="mover(1)">›</button></div><div class="grid">`;
+  h += ['L','M','M','J','V','S','D'].map(d=>`<div class="dow">${d}</div>`).join('');
+  for(let i=0;i<offset;i++) h += '<div></div>';
+  for(let d=1; d<=dias; d++){
+    const f = new Date(y,m,d);
+    const pasado = f < hoy;
+    const sel = st.fecha && f.getTime()===st.fecha.getTime();
+    const esHoy = f.getTime()===hoy.getTime();
+    h += `<button class="day ${sel?'sel':''} ${esHoy?'today':''}" ${pasado?'disabled':''} onclick="elegir(${y},${m},${d})">${d}</button>`;
+  }
+  $('#cal').innerHTML = h + '</div>';
+}
+function mover(n){ mesVista = new Date(mesVista.getFullYear(), mesVista.getMonth()+n, 1); pintarCal(); }
+function elegir(y,m,d){ st.fecha = new Date(y,m,d); pintarCal(); chequear4(); }
+function chequear4(){ $('#sig4').disabled = !(st.fecha && st.hora); }
+
+// 5 · qué tomás + dónde
+const bebidas = [
+  ['☕','Café'],['🧉','Mate'],['🍵','Té'],['🍫','Submarino'],
+  ['🥤','Licuado verde, soy de Recoleta'],['🍷','Esto no es un café, es un vino'],
+  ['🚰','Agua de la canilla, soy humilde'],['⏱️','Un cortado rápido, tengo cosas'],
+  ['💸','Lo que sea, invitás vos']
+];
+function p5(){
+  pantalla(7, `
+    <div class="tag">🔎 investigación de campo</div>
+    <h1>Qué tomás?</h1>
+    <p>Dato que la Junta desconoce. 2 meses de vecinos y no sé esto. Vergonzoso.</p>
+    <div class="opts" id="beb">${bebidas.map((b,i)=>`<button class="chip ${i===bebidas.length-1?'wide':''}" data-b="${b[1]}">${b[0]} ${b[1]}</button>`).join('')}</div>
+    <div class="lbl">Dónde? Vos sos la veterana del barrio, elegí vos</div>
+    <input type="text" id="lugar" placeholder="tu lugar favorito de Recoleta (o 'sorprendeme')" maxlength="80" value="${st.lugar}">
+    <div class="actions"><button class="btn" id="sig5" disabled onclick="p6()">firmar el trámite →</button></div>
+  `);
+  $('#beb').onclick = e => {
+    const b = e.target.closest('.chip'); if(!b) return;
+    document.querySelectorAll('#beb .chip').forEach(c=>c.classList.remove('sel'));
+    b.classList.add('sel'); st.bebida = b.dataset.b; $('#sig5').disabled = false;
+  };
+  $('#lugar').oninput = e => st.lugar = e.target.value;
+}
+
+// 6 · aprobado
+function p6(){
+  const fecha = st.fecha.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+  const lugar = st.lugar.trim() || 'donde diga la veterana';
+  pantalla(8, `
+    <div class="stamp">APROBADO</div>
+    <div class="tag">✅ trámite resuelto</div>
+    <h1>Deuda saldada. Casi.</h1>
+    <div class="expte">
+      Cuándo: <b>${fecha}, ${st.hora} hs</b><br>
+      Qué: <b>${esc(st.bebida)}</b><br>
+      Dónde: <b>${esc(lugar)}</b><br>
+      Intentos de apretar NO: <b class="red">${st.noTries}</b><br>
+      Paga: <b>el vecino nuevo (por esta vez)</b>
+    </div>
+    <p>Ya me llegó todo. Si no aparezco, denunciame a la Junta.</p>
+    <p class="ps">PD: la gente normal manda un mensaje. Yo hice una web con un botón que se escapa. Cada uno con lo suyo.</p>
+  `);
+  avisar('Café con Alexia: confirmado ☕', `📅 ${fecha}, ${st.hora} hs\n🥤 ${st.bebida}\n📍 ${lugar}\n😅 Intentos de NO: ${st.noTries}`);
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+p1();
+</script>
+</body>
+</html>
